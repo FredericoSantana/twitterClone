@@ -58,4 +58,16 @@ class Usuario extends Model
   }
 
   //recuperar um usuário por e-mail
+  public function getUsuarioPorEmail()
+  {
+    $query = 'SELECT nome, email 
+                FROM usuarios 
+               WHERE email = :email';
+
+    $stmt = $this->db->prepare($query);
+    $stmt->bindValue(':email', $this->__get('email'));
+    $stmt->execute();
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+  }
 }
