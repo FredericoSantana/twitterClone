@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use MF\Controller\Action;
+use MF\Model\Container;
 
 class AppController extends Action
 {
@@ -10,10 +11,48 @@ class AppController extends Action
   {
     session_start();
 
-    if (!empty($_SESSION['id']) && !empty($_SESSION['nome'])) {
+   if (!empty($_SESSION['id']) && !empty($_SESSION['nome'])) {
+
+      //recuperar os tweets
+      $tweet = Container::getModel('Tweet');
+
+      $tweet->__set('id_usuario', $_SESSION['id']);
+
+      $tweets = $tweet->getAll();
+
+      $this->view->tweets = $tweets;
+
       $this->render('timeline');
     }else{
       header('Location: /?login=erro');
     }
   }
+
+  public function tweet()
+  {
+    session_start();
+
+    if (!empty($_SESSION['id']) && !empty($_SESSION['nome'])) {
+      $tweet = Container::getModel('Tweet');
+
+      $tweet->__set('tweet', $_POST['tweet']);
+      $tweet->__set('id_usuario', $_SESSION['id']);
+
+      $tweet->salvar();
+
+      header('Location: /timeline');
+
+    }else{
+      header('Location: /?login=erro');
+    }
+  }
+/*
+  public function validaAutenticacao()
+  {
+    session_start();
+    if (!isset($_SESSION['id']) || !empty($_SESSION['id']) || !isset($_SESSION['nome']) || !empty($_SESSION['nome'])) {
+      header('Location: /?login=erro');
+    }
+  }
+*/
 }
