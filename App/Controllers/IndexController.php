@@ -16,6 +16,11 @@ class IndexController extends Action
 
   public function inscreverse()
   {
+    $this->view->usuario = [
+      'nome' => '',
+      'email' => '',
+      'senha' => ''
+    ];
     $this->view->erroCadastro = false;
     $this->render('inscreverse');
   }
@@ -36,6 +41,12 @@ class IndexController extends Action
         $this->render('cadastro');
 
     }else{
+      $this->view->usuario = [
+        'nome' => $_POST['nome'],
+        'email' => $_POST['email'],
+        'senha' => $_POST['senha']
+      ];
+
       $this->view->erroCadastro = true;
 
       $this->render('inscreverse');
