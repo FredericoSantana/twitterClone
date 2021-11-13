@@ -95,11 +95,19 @@ class Usuario extends Model
 
   public function getAll()
   {
-    $query = 'SELECT id, nome, email
-                FROM usuarios
-               WHERE nome
+    $query = 'SELECT u.id, u.nome, u.email, 
+                    (
+                        SELECT COUNT(*)
+                          FROM usuarios_seguidores 
+                            AS us
+                         WHERE us.id_usuario = :id_usuario
+                           AND us.id_usuario_seguindo = u.id
+                    ) 
+                  AS seguindo_sn
+                FROM usuarios AS u
+               WHERE u.nome
                 LIKE :nome
-                 AND id != :id_usuario';
+                 AND u.id != :id_usuario';
 
     $stmt = $this->db->prepare($query);
     $stmt->bindValue(':nome', '%' . $this->__get('nome') . '%');
