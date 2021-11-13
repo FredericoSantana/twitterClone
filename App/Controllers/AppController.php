@@ -65,4 +65,21 @@ class AppController extends Action
     $this->render('quemSeguir');
   }
 
+  public function acao()
+  {
+    $this->validaAutenticacao();
+
+    $acao = $_GET['acao'] ?? '';
+    $id_usuario_seguindo = $_GET['id_usuario'] ?? '';
+
+    $usuario = Container::getModel('Usuario');
+    $usuario->__set('id', $_SESSION['id']);
+
+    if ($acao == 'seguir') {
+      $usuario->seguirUsuario($id_usuario_seguindo);
+    }elseif ($acao == 'deixar_de_seguir'){
+      $usuario->deixarSeguirUsuario($id_usuario_seguindo);
+    }
+  }
+
 }
